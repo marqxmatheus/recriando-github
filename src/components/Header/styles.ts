@@ -6,7 +6,7 @@ export const Container = styled.div`
   align-items: center;
   background: var(--header);
   padding: 11px 16px;
-`  
+`
 
 export const GithubLogo = styled(FaGithub)`
   fill: var(--logo);
@@ -15,7 +15,21 @@ export const GithubLogo = styled(FaGithub)`
   flex-shrink: 0;
 `
 
-export const SearchForm = styled.div`
-  display: flex;
-  padding-left: 16px;
-`
+export const SearchForm = styled.form`
+    padding-left: 16px;
+    width: 100%;
+
+    input {
+    background: var(--search);
+    outline: 0;
+    border-radius: 6px;
+    padding: 7px 12px;
+    width: 100%;
+
+    &:focus{
+      width: 318px;
+    }
+
+    transition: width .2s ease-out, color .2s ease-out;
+  }
+`;
