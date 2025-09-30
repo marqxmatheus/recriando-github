@@ -1,55 +1,24 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components';
+import type { ThemeType } from './themes';
 
-export default createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+export default createGlobalStyle<{ theme: ThemeType }>`
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html {
-    min-height: 100%;
-    background: var(--primary);
-  }
-
-  *, button, input {
-    border: 0;
-    background: none;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
-    color: var(--black);
-  }
-
-  ul {
-    list-style: none;
-  }
+  html, body, #root { min-height: 100%; }
 
   :root {
-    --primary: #fff;
-    --black: #1b1f23;
-    --gray: #586069;
-    --gray-light: #6a737d;
-    --gray-dark: #24292e;
-    --accent: rgba(119, 43, 30, 1);
-    --accent-2: #f9826c;
-    --logo: #fff;
-    --header: #f6f8fa;
-    --username: #666;
-    --search: rgba(255, 255, 255, 0.13);
-    --search-placeholder: hsla(0, 0%, 100%, .75);
-    --icon: #6a737d;
-    --link: #0366d6;
-    --border: #e1e4e8;
-    --ticker: rgba(209, 213, 218, .5);
-
-    --calendar-scale-0: #ebedf0;
-    --calendar-scale-1: #9BE9A8;
-    --calendar-scale-2: #3FC463;
-    --calendar-scale-3: #30A14E;
-    --calendar-scale-4: #216E3A;
-
-    --javascript: #f1e05a;
-    --typescript: #2b7489;
-    --java: #b07219;
-    --other-language: #8257e5;
+    ${({ theme }) =>
+    Object.entries(theme)
+      .map(([k, v]) => `--${k}: ${v}`)
+      .join(';\n')
+  };
   }
-`
+
+  body {
+    background: var(--primary);
+    color: var(--black);
+    font: 400 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+  }
+
+  a { color: var(--link); }
+`;

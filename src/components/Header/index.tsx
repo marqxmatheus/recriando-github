@@ -10,7 +10,7 @@ interface Props {
   setThemeName: (newName: ThemeName) => void;
 }
 
-const Header: React.FC<Props> = () => {
+const Header: React.FC<Props> = ({ themeName, setThemeName }) => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
@@ -20,9 +20,13 @@ const Header: React.FC<Props> = () => {
     navigate('/' + search.toLowerCase().trim());
   }
 
+  function toggleTheme() {
+    setThemeName(themeName === 'light' ? 'dark' : 'light')
+  }
+
   return (
     <Container>
-      <GithubLogo />
+      <GithubLogo onClick={toggleTheme} />
       <SearchForm onSubmit={handleSubmit}>
         <input
           placeholder="Enter Username or Repo..."

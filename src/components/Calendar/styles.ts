@@ -1,15 +1,14 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  --c0: #ebedf0;
-  --c1: #9be9a8;
-  --c2: #40c463;
-  --c3: #30a14e;
-  --c4: #216e39;
+  --c0: var(--calendar0, #ebedf0);
+  --c1: var(--calendar1, #9be9a8);
+  --c2: var(--calendar2, #40c463);
+  --c3: var(--calendar3, #30a14e);
+  --c4: var(--calendar4, #216e39);
 
-  .wrapper {
-    overflow-x: auto;
-  }
+
+  .wrapper { overflow-x: auto; }
 
   .react-calendar-heatmap rect {
     shape-rendering: geometricPrecision;

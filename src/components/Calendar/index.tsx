@@ -31,23 +31,18 @@ const QUERY = `
   }
 `;
 
+/* domingo → início da semana */
 function startOfWeekSunday(d: Date) {
   const x = new Date(d);
-  const dow = x.getDay();
+  const dow = x.getDay(); // 0=Dom
   x.setDate(x.getDate() - dow);
   x.setHours(0, 0, 0, 0);
   return x;
 }
-function endOfWeekSaturday(d: Date) {
-  const x = new Date(d);
-  const dow = x.getDay();
-  x.setDate(x.getDate() + (6 - dow));
-  x.setHours(23, 59, 59, 999);
-  return x;
-}
 
-function toLocalDate(isoDateYMD: string): Date {
-  const [y, m, d] = isoDateYMD.split('-').map(Number);
+/* "YYYY-MM-DD" -> Date local (evita shift por timezone) */
+function toLocalDate(isoYMD: string): Date {
+  const [y, m, d] = isoYMD.split('-').map(Number);
   return new Date(y, (m as number) - 1, d);
 }
 
@@ -64,15 +59,12 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
   const params = useParams<{ username?: string }>();
   const login = username ?? params.username ?? 'octocat';
 
+  // >>> FIM NA TERÇA (ou dia atual): endDate = hoje 23:59:59
   const { startDate, endDate, startISO, endISO } = React.useMemo(() => {
-    const end = endOfWeekSaturday(new Date());
-    const start = startOfWeekSunday(subYears(end, 1));
-    return {
-      startDate: start,
-      endDate: end,
-      startISO: start.toISOString(),
-      endISO: end.toISOString(),
-    };
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);            // inclui o dia atual por completo
+    const start = startOfWeekSunday(subYears(end, 1)); // ancora no domingo de ~1 ano atrás
+    return { startDate: start, endDate: end, startISO: start.toISOString(), endISO: end.toISOString() };
   }, []);
 
   const [values, setValues] = React.useState<HeatItem[]>([]);
@@ -88,7 +80,9 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
       try {
         const json = await ghGql<GQLResp>(QUERY, { login, from: startISO, to: endISO });
         const weeks = json?.data?.user?.contributionsCollection?.contributionCalendar?.weeks ?? [];
-        const vals = flattenWeeks(weeks);
+        // filtra qualquer dia além do 'to' (por precaução)
+        const vals = flattenWeeks(weeks).filter(v => v.date <= endDate);
+
         if (!cancelled) {
           setValues(vals);
           setMaxCount(vals.reduce((m, v) => (v.count > m ? v.count : m), 0));
@@ -100,7 +94,7 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
       }
     })();
     return () => { cancelled = true; };
-  }, [login, startISO, endISO]);
+  }, [login, startISO, endISO, endDate]);
 
   const classForValue = React.useCallback(
     (item: HeatItem | null) => {
@@ -119,7 +113,7 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
       <div className="wrapper">
         <CalendarHeatmap
           startDate={startDate}
-          endDate={endDate}
+          endDate={endDate}          // <<< agora termina no dia atual
           values={values}
           gutterSize={3.5}
           classForValue={classForValue as any}
