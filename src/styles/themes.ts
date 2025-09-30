@@ -27,6 +27,8 @@ export const themes = {
     typescript: '#2b7489',
     java: '#b07219',
     'other-language': '#8257e5',
+    inputText: '#24292f',
+    inputPlaceholder: '#6e7781',
   },
   dark: {
     primary: '#212830',
@@ -56,8 +58,16 @@ export const themes = {
     typescript: '#2b7489',
     java: '#b07219',
     'other-language': '#8257e5',
+    inputText: '#e6edf3',
+    inputPlaceholder: '#8b949e',
   },
 } as const;
 
 export type ThemeName = keyof typeof themes;
 export type ThemeType = typeof themes.light;
+
+import 'styled-components';
+
+declare module 'styled-components' {
+  export interface DefaultTheme extends ThemeType { }
+}

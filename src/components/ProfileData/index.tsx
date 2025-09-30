@@ -2,6 +2,26 @@ import React from 'react';
 
 import { Container, Flex, Avatar, Row, PeopleIcon, Column, CompanyIcon, LocationIcon, EmailIcon, BlogIcon } from './styles';
 
+const formatCount = (n: number) => {
+  try {
+    // browsers modernos: “compact notation”
+    return Intl.NumberFormat('en', {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    })
+      .format(n)
+      .toLowerCase(); // K -> k
+  } catch {
+    // fallback simples
+    const abs = Math.abs(n);
+    const sign = n < 0 ? '-' : '';
+    if (abs < 1_000) return String(n);
+    if (abs < 1_000_000) return sign + (Math.round((abs / 1_000) * 10) / 10) + 'k';
+    if (abs < 1_000_000_000) return sign + (Math.round((abs / 1_000_000) * 10) / 10) + 'm';
+    return sign + (Math.round((abs / 1_000_000_000) * 10) / 10) + 'b';
+  }
+};
+
 interface Props {
   username: string;
   name: string;
@@ -39,15 +59,16 @@ const ProfileData: React.FC<Props> = ({
       <Row>
         <li>
           <PeopleIcon />
-          <b>{followers}</b>
+          <b title={followers.toLocaleString()}>{formatCount(followers)}</b>
           <span>followers</span>
           <span>·</span>
         </li>
         <li>
-          <b>{following}</b>
+          <b title={following.toLocaleString()}>{formatCount(following)}</b>
           <span>following</span>
         </li>
       </Row>
+
 
       <Column>
         {company && (
