@@ -32,7 +32,7 @@ export default createGlobalStyle`
     --accent: rgba(119, 43, 30, 1);
     --accent-2: #f9826c;
     --logo: #fff;
-    --header: #24292e;
+    --header: #f6f8fa;
     --username: #666;
     --search: rgba(255, 255, 255, 0.13);
     --search-placeholder: hsla(0, 0%, 100%, .75);
@@ -49,6 +49,7 @@ export default createGlobalStyle`
 
     --javascript: #f1e05a;
     --typescript: #2b7489;
+    --java: #b07219;
     --other-language: #8257e5;
   }
 `

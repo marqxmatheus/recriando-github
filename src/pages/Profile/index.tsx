@@ -14,7 +14,7 @@ import {
 
 import ProfileData from '../../components/ProfileData';
 import RepoCard from '../../components/RepoCard';
-import RandomCalendar from '../../components/RandomCalendar';
+import RandomCalendar from '../../components/Calendar';
 
 import type { APIUser, APIRepo } from '../../@types';
 
@@ -28,30 +28,32 @@ const Profile: React.FC = () => {
   const { username = 'marqxmatheus' } = useParams();
   const [data, setData] = useState<Data>();
 
+
   useEffect(() => {
-    Promise.all([
-      fetch(`https://api.github.com/users/${username}`),
-      fetch(`https://api.github.com/users/${username}/repos`),
-    ]).then(async (responses) => {
-      const [userResponse, reposResponse] = responses;
+    async function loadData() {
+      try {
+        const [userRes, reposRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${username}`),
+          fetch(`https://api.github.com/users/${username}/repos?per_page=10&page=1&sort=updated`),
+        ]);
 
-      if (userResponse.status === 404) {
-        setData({ error: 'User not found!' });
-        return;
+        if (userRes.status === 404) {
+          setData({ error: 'User not found!' });
+          return;
+        }
+
+        const user = await userRes.json();
+        const repos = await reposRes.json();
+
+        setData({ user, repos });
+      } catch (e) {
+        setData({ error: 'Erro ao carregar dados do GitHub.' });
       }
+    }
 
-      const user = await userResponse.json();
-      const repos = await reposResponse.json();
-
-      const shuffledRepos = repos.sort(() => 0.5 - Math.random());
-      const slicedRepos = shuffledRepos.slice(0, 6); // 6 repos
-
-      setData({
-        user,
-        repos: slicedRepos,
-      });
-    });
+    loadData();
   }, [username]);
+
 
   if (data?.error) {
     return <h1>{data.error}</h1>;
@@ -73,7 +75,6 @@ const Profile: React.FC = () => {
     <Container>
       <Tab className="desktop">
         <div className="wrapper">
-          <span className="offset" />
           <TabContent />
         </div>
 
@@ -102,8 +103,6 @@ const Profile: React.FC = () => {
           </Tab>
 
           <Repos>
-            <h2>Random repos</h2>
-
             <div>
               {data.repos.map((item) => (
                 <RepoCard
@@ -120,7 +119,7 @@ const Profile: React.FC = () => {
           </Repos>
 
           <CalendarHeading>
-            Random calendar (do not represent actual data)
+            <p></p>
           </CalendarHeading>
 
           <RandomCalendar />

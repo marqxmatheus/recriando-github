@@ -3,9 +3,8 @@ import { RiBookMarkedLine } from 'react-icons/ri';
 
 export const Container = styled.div`
   --horizontalPadding: 16px;
-  --verticalPadding: 24px;
+  --verticalPadding: 0;
 
-  padding: var(--verticalPadding) var(--horizontalPadding);
   overflow: hidden;
 `;
 
@@ -44,19 +43,6 @@ export const Repos = styled.div`
     font-size: 16px;
     font-weight: normal;
   }
-  > div {
-    margin-top: 8px;
-
-    display: grid;
-    grid-gap: 16px;
-
-    grid-template-columns: 1fr;
-
-    @media (min-width: 768px) {
-      grid-template-columns: 1fr 1fr;
-      grid-auto-rows: minmax(min-content, max-content);
-    }
-  }
 `;
 
 export const CalendarHeading = styled.span`
@@ -72,7 +58,7 @@ export const RepoIcon = styled(RiBookMarkedLine)`
 `;
 
 export const Tab = styled.div`
-  background: var(--primary);
+  background: var(--header);
 
   .content {
     display: flex;
@@ -80,8 +66,6 @@ export const Tab = styled.div`
     width: min-content;
 
     padding: 14px 16px;
-
-    border-bottom: 2px solid var(--orange);
 
     .label {
       font-size: 14px;
@@ -115,7 +99,7 @@ export const Tab = styled.div`
     }
   }
   &.desktop {
-  display: block;
+  display: none;
 
   @media (min-width: 768px) {
     display: block;
@@ -127,7 +111,7 @@ export const Tab = styled.div`
     }
 
     .content {
-    margin-left: calc(25% + var(--horizontalPadding));
+    margin-left: var(--horizontalPadding);
     }
 
       .offset {
