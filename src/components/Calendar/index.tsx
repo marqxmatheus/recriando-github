@@ -59,8 +59,8 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
 
   const { startDate, endDate, startISO, endISO } = React.useMemo(() => {
     const end = new Date();
-    end.setHours(23, 59, 59, 999);            // inclui o dia atual por completo
-    const start = startOfWeekSunday(subYears(end, 1)); // ancora no domingo de ~1 ano atrás
+    end.setHours(23, 59, 59, 999);            
+    const start = startOfWeekSunday(subYears(end, 1)); 
     return { startDate: start, endDate: end, startISO: start.toISOString(), endISO: end.toISOString() };
   }, []);
 
