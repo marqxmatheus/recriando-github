@@ -9,7 +9,7 @@ const formatCount = (n: number) => {
       maximumFractionDigits: 1,
     })
       .format(n)
-      .toLowerCase(); // K -> k
+      .toLowerCase(); 
   } catch {
     const abs = Math.abs(n);
     const sign = n < 0 ? '-' : '';
