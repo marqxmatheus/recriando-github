@@ -4,7 +4,6 @@ import { Container, Flex, Avatar, Row, PeopleIcon, Column, CompanyIcon, Location
 
 const formatCount = (n: number) => {
   try {
-    // browsers modernos: “compact notation”
     return Intl.NumberFormat('en', {
       notation: 'compact',
       maximumFractionDigits: 1,
@@ -12,7 +11,6 @@ const formatCount = (n: number) => {
       .format(n)
       .toLowerCase(); // K -> k
   } catch {
-    // fallback simples
     const abs = Math.abs(n);
     const sign = n < 0 ? '-' : '';
     if (abs < 1_000) return String(n);
