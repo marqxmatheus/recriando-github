@@ -31,7 +31,6 @@ const QUERY = `
   }
 `;
 
-/* domingo → início da semana */
 function startOfWeekSunday(d: Date) {
   const x = new Date(d);
   const dow = x.getDay(); // 0=Dom
@@ -40,7 +39,6 @@ function startOfWeekSunday(d: Date) {
   return x;
 }
 
-/* "YYYY-MM-DD" -> Date local (evita shift por timezone) */
 function toLocalDate(isoYMD: string): Date {
   const [y, m, d] = isoYMD.split('-').map(Number);
   return new Date(y, (m as number) - 1, d);
@@ -59,7 +57,6 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
   const params = useParams<{ username?: string }>();
   const login = username ?? params.username ?? 'octocat';
 
-  // >>> FIM NA TERÇA (ou dia atual): endDate = hoje 23:59:59
   const { startDate, endDate, startISO, endISO } = React.useMemo(() => {
     const end = new Date();
     end.setHours(23, 59, 59, 999);            // inclui o dia atual por completo
@@ -80,7 +77,6 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
       try {
         const json = await ghGql<GQLResp>(QUERY, { login, from: startISO, to: endISO });
         const weeks = json?.data?.user?.contributionsCollection?.contributionCalendar?.weeks ?? [];
-        // filtra qualquer dia além do 'to' (por precaução)
         const vals = flattenWeeks(weeks).filter(v => v.date <= endDate);
 
         if (!cancelled) {
@@ -113,7 +109,7 @@ const GithubCalendar: React.FC<{ username?: string }> = ({ username }) => {
       <div className="wrapper">
         <CalendarHeatmap
           startDate={startDate}
-          endDate={endDate}          // <<< agora termina no dia atual
+          endDate={endDate}         
           values={values}
           gutterSize={3.5}
           classForValue={classForValue as any}
